@@ -1,11 +1,8 @@
-const express= require("express")
-const app=express();
+const express = require("express");
+const { adminAuth, userAuth } = require("./middlewares/auth");
+const app = express();
 
-app.use("/test",(req,res)=>{
-    res.send("Heloo from test")
-})
-
-app.listen(8888,()=>{
-    console.log("Server is listening on port 888.....");
-    
-})
+ 
+app.listen(8888, () => {
+  console.log("Server is listening on port 8888.....");
+});
