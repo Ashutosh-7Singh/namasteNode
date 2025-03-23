@@ -45,7 +45,6 @@ app.get("/feed",async (req,res)=>{
 
 app.delete("/user",async (req,res)=>{
 const userId=await req.body.userId
-
 if (!userId) {
   return res.status(400).json({ success: false, message: "User ID is required" });
 }
@@ -54,7 +53,6 @@ if (!userId) {
     if(!user){
       return res.status(404).json({sucess:false,message:"User not found"})
     }
-
     // res.send("User deleted Successfully")
     res.json({success:true,message:"User deleted sucessfully"})
   }catch(error){
@@ -65,19 +63,32 @@ if (!userId) {
 
 app.patch("/user",async(req,res)=>{
   const userId = req.body.userId;
+  if(!userId){
+    return res.status(404).json({success:false,message:"userId not found"})
+  }
   // console.log(userId);
   const data=req.body;
   // console.log(data);
   try{
     // const user =await User.findByIdAndUpdate({_id:userId},data,{returnDocument:"before"});
-    const user =await User.findByIdAndUpdate({_id:userId},data);
+    const user =await User.findByIdAndUpdate({_id:userId},data,{
+      returnDocument:"after",
+      runValidators:true,
+    });
     res.json({success:true,message:"User updated Sucessfully"});
     console.log(user);
     
   }
-  catch(error){
-    res.status(404).json({sucess:false,message:"Faild to update"})
+  catch (error) {
+    console.error("Error updating user:", error); // Logs the full error for debugging
+    
+    res.status(400).json({
+      success: false,
+      message: "Failed to update",
+      error: error.message // This sends the actual error message
+    });
   }
+  
 })
 
 
